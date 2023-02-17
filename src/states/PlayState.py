@@ -8,7 +8,7 @@ alejandro.j.mujic4@gmail.com
 This file contains the class to define the Play state.
 """
 import random
-
+import sys
 import pygame
 
 from gale.factory import AbstractFactory
@@ -90,10 +90,19 @@ class PlayState(BaseState):
                 self.paddle.inc_size()
 
             # Chance to generate two more balls
-            if random.random() < 0.7:
+            if random.random() < 0.1:
                 r = brick.get_collision_rect()
                 self.powerups.append(
                     self.powerups_abstract_factory.get_factory("TwoMoreBall").create(
+                        r.centerx - 8, r.centery - 8
+                    )
+                )
+
+            # Chance to generate sticky ball
+            if random.random() < 1:
+                r = brick.get_collision_rect()
+                self.powerups.append(
+                    self.powerups_abstract_factory.get_factory("StickyBall").create(
                         r.centerx - 8, r.centery - 8
                     )
                 )
@@ -208,3 +217,9 @@ class PlayState(BaseState):
                 live_factor=self.live_factor,
                 powerups=self.powerups,
             )
+        elif input_id == "enter" and input_data.pressed:
+            for ball in self.balls:
+                if ball.stuck_to_paddle:
+                    ball.stuck_to_paddle = False
+                    ball.vx = random.randint(-80, 80)
+                    ball.vy = random.randint(-170, -100)

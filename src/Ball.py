@@ -30,6 +30,10 @@ class Ball:
         self.frame = random.randint(0, 6)
         self.in_play = True
 
+        self.sticky = False
+        self.stuck_to_paddle = False
+        self.paddle_ref = None
+
     def get_collision_rect(self) -> pygame.Rect:
         return pygame.Rect(self.x, self.y, self.width, self.height)
 
@@ -59,6 +63,11 @@ class Ball:
         return self.get_collision_rect().colliderect(another.get_collision_rect())
 
     def update(self, dt: float) -> None:
+        if self.stuck_to_paddle:
+            self.vx = self.paddle_ref.vx
+            if self.paddle_ref.x <= 0 or self.paddle_ref.x >= settings.VIRTUAL_WIDTH - self.paddle_ref.width:
+                self.vx = 0
+        
         self.x += self.vx * dt
         self.y += self.vy * dt
 
@@ -91,7 +100,7 @@ class Ball:
 
         return (x_shift, y_shift)
 
-    def rebound(self, another: Any):
+    def rebound(self, another: Any) -> None:
         br = self.get_collision_rect()
         sr = another.get_collision_rect()
 
@@ -116,7 +125,18 @@ class Ball:
     def push(self, paddle: Paddle) -> None:
         """
         Push the ball according to the position that it collides with the paddle and the paddle speed.
-        """
+        """        
+        if self.sticky:
+            self.stuck_to_paddle = True
+            self.vx = 0
+            self.vy = 0
+            self.paddle_ref = paddle
+            
+
+        if self.stuck_to_paddle:
+            return
+
+ 
         br = self.get_collision_rect()
         pr = paddle.get_collision_rect()
         d = pr.centerx - br.x
