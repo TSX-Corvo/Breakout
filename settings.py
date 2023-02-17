@@ -50,6 +50,9 @@ PADDLE_GROW_UP_POINTS = 200
 
 POWERUP_SPEED = 50
 
+# Sticky ball buff duration in seconds
+STICKY_BALL_DURATION = 10.0
+
 BASE_DIR = Path(__file__).parent
 
 pygame.mixer.init()

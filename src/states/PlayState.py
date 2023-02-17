@@ -35,6 +35,10 @@ class PlayState(BaseState):
         )
         self.powerups = params.get("powerups", [])
 
+        self.flags = {
+            'sticky_ball_active': False
+        }
+
         if not params.get("resume", False):
             self.balls[0].vx = random.randint(-80, 80)
             self.balls[0].vy = random.randint(-170, -100)
@@ -89,17 +93,18 @@ class PlayState(BaseState):
                 )
                 self.paddle.inc_size()
 
+            dice_roll = random.random()
+
             # Chance to generate two more balls
-            if random.random() < 0.1:
+            if dice_roll < 0.1:
                 r = brick.get_collision_rect()
                 self.powerups.append(
                     self.powerups_abstract_factory.get_factory("TwoMoreBall").create(
                         r.centerx - 8, r.centery - 8
                     )
                 )
-
             # Chance to generate sticky ball
-            if random.random() < 1:
+            elif dice_roll < 0.3 and not self.flags['sticky_ball_active']:
                 r = brick.get_collision_rect()
                 self.powerups.append(
                     self.powerups_abstract_factory.get_factory("StickyBall").create(
