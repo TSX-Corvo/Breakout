@@ -7,6 +7,8 @@ The chosen powerup for this assignment is "Matrix"; when activated, it causes ev
 
 ### Changelog
 
+## 1.1.0
+- Added "Sticky Ball" Powerup: All the balls currently in game at the time of taking the powerup will become sticky for 10 seconds, when they collide with the paddle they won't rebound, instead, they will be left in a serve-like state.
 ## 1.0.0 
 - Initial version
 - Added README.md
