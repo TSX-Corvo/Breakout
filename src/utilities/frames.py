@@ -82,3 +82,7 @@ def generate_powerups_frames() -> List[pygame.Rect]:
         frames.append(pygame.Rect(j * 16, y, 16, 16))
 
     return frames
+
+def generate_cannon_frames(spritesheet: pygame.surface) -> List[pygame.Rect]:
+    frames = generate_frames(spritesheet, 32, 32)
+    return frames

@@ -21,6 +21,7 @@ from src.utilities.frames import (
     generate_ball_frames,
     generate_brick_frames,
     generate_powerups_frames,
+    generate_cannon_frames
 )
 
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_ESCAPE, "quit")
@@ -76,6 +77,7 @@ TEXTURES = {
     "spritesheet": pygame.image.load(BASE_DIR / "graphics" / "breakout.png"),
     "hearts": pygame.image.load(BASE_DIR / "graphics" / "hearts.png"),
     "arrows": pygame.image.load(BASE_DIR / "graphics" / "arrows.png"),
+    "cannon": pygame.image.load(Path(BASE_DIR, "graphics", "cannon.png"))
 }
 
 FRAMES = {
@@ -85,6 +87,7 @@ FRAMES = {
     "hearts": generate_frames(TEXTURES["hearts"], 10, 9),
     "arrows": generate_frames(TEXTURES["arrows"], 24, 24),
     "powerups": generate_powerups_frames(),
+    "cannon": generate_cannon_frames()
 }
 
 pygame.font.init()
