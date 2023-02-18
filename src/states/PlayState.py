@@ -15,9 +15,11 @@ from gale.factory import AbstractFactory
 from gale.state_machine import BaseState
 from gale.input_handler import InputHandler, InputData, InputData
 from gale.text import render_text
+from gale.factory import Factory
 
 import settings
 import src.powerups
+from src.Missile import Missile
 
 class PlayState(BaseState):
     def enter(self, **params: dict):
@@ -37,6 +39,8 @@ class PlayState(BaseState):
 
         self.cannons = params.get("cannons", [])
 
+        self.missiles = params.get("missiles", [])
+
         self.flags = params.get("flags", {
             'sticky_ball_active': False,
             'cannon_active': False
@@ -48,6 +52,8 @@ class PlayState(BaseState):
             settings.SOUNDS["paddle_hit"].play()
 
         self.powerups_abstract_factory = AbstractFactory("src.powerups")
+
+        self.missile_factory = Factory(Missile)
 
         InputHandler.register_listener(self)
 
@@ -125,6 +131,24 @@ class PlayState(BaseState):
 
         # Removing all balls that are not in play
         self.balls = [ball for ball in self.balls if ball.in_play]
+
+        for missile in self.missiles:
+            missile.update(dt)
+            missile.solve_world_boundaries()
+
+            # Check collision with brickset
+            if not missile.collides(self.brickset):
+                continue
+
+            brick = self.brickset.get_colliding_brick(missile.get_collision_rect())
+
+            if brick is None:
+                continue
+
+            brick.hit()
+            self.score += brick.score()
+        
+        self.missiles = [missile for missile in self.missiles if missile.in_play]
 
         self.brickset.update(dt)
 
@@ -215,6 +239,9 @@ class PlayState(BaseState):
         for cannon in self.cannons:
             cannon.render(surface)
 
+        for missile in self.missiles:
+            missile.render(surface)
+
     def on_input(self, input_id: str, input_data: InputData) -> None:
         if input_id == "move_left":
             if input_data.pressed:
@@ -239,7 +266,8 @@ class PlayState(BaseState):
                 live_factor=self.live_factor,
                 powerups=self.powerups,
                 flags=self.flags,
-                cannons=self.cannons
+                cannons=self.cannons,
+                missiles=self.missiles
             )
         elif input_id == "enter" and input_data.pressed:
             for ball in self.balls:
@@ -247,3 +275,10 @@ class PlayState(BaseState):
                     ball.stuck_to_paddle = False
                     ball.vx = random.randint(-80, 80)
                     ball.vy = random.randint(-170, -100)
+        elif input_id == "fire" and input_data.pressed and self.flags['cannon_active']:
+            m1 = self.missile_factory.create(self.paddle.x + 4, self.paddle.y - 8)
+            m2 = self.missile_factory.create(self.paddle.x + self.paddle.width - 12, self.paddle.y - 8)
+            self.missiles.append(m1)
+            self.missiles.append(m2)
+            self.flags['cannon_active'] = False
+            self.cannons = []

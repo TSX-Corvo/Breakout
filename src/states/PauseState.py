@@ -20,6 +20,7 @@ class PauseState(BaseState):
         self.powerups = params["powerups"]
         self.flags = params["flags"]
         self.cannons = params["cannons"]
+        self.missiles = params["missiles"]
         settings.SOUNDS["pause"].play()
         InputHandler.register_listener(self)
 
@@ -86,5 +87,6 @@ class PauseState(BaseState):
                 powerups=self.powerups,
                 flags=self.flags,
                 cannons=self.cannons,
+                missiles=self.missiles,
                 resume=True,
             )
