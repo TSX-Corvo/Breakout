@@ -36,7 +36,8 @@ class PlayState(BaseState):
         self.powerups = params.get("powerups", [])
 
         self.flags = {
-            'sticky_ball_active': False
+            'sticky_ball_active': False,
+            'cannon_active': False
         }
 
         if not params.get("resume", False):
@@ -108,6 +109,14 @@ class PlayState(BaseState):
                 r = brick.get_collision_rect()
                 self.powerups.append(
                     self.powerups_abstract_factory.get_factory("StickyBall").create(
+                        r.centerx - 8, r.centery - 8
+                    )
+                )
+            # Chance to generate cannon
+            elif dice_roll < 1 and not self.flags['cannon_active']:
+                r = brick.get_collision_rect()
+                self.powerups.append(
+                    self.powerups_abstract_factory.get_factory("Cannon").create(
                         r.centerx - 8, r.centery - 8
                     )
                 )
