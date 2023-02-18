@@ -112,6 +112,15 @@ class PlayState(BaseState):
                         r.centerx - 8, r.centery - 8
                     )
                 )
+                        # Change to generate Armageddon
+            elif dice_roll < 1:
+                r = brick.get_collision_rect()
+                self.powerups.append(
+                    self.powerups_abstract_factory.get_factory("Armageddon").create(
+                        r.centerx - 8, r.centery - 8
+                    )
+                )
+
             # Chance to generate sticky ball
             elif dice_roll < 0.3 and not self.flags['sticky_ball_active']:
                 r = brick.get_collision_rect()
@@ -121,13 +130,14 @@ class PlayState(BaseState):
                     )
                 )
             # Chance to generate cannon
-            elif dice_roll < 1 and not self.flags['cannon_active']:
+            elif dice_roll < 0.6 and not self.flags['cannon_active']:
                 r = brick.get_collision_rect()
                 self.powerups.append(
                     self.powerups_abstract_factory.get_factory("Cannon").create(
                         r.centerx - 8, r.centery - 8
                     )
                 )
+
 
         # Removing all balls that are not in play
         self.balls = [ball for ball in self.balls if ball.in_play]

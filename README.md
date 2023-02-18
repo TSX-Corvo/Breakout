@@ -3,9 +3,13 @@
 
 # Assignment 3: Breakout
 
-The chosen powerup for this assignment is "Matrix"; when activated, it causes every ball in game to move at half of its original speed whenever it's at the bottom half of the screen or lower. This effect lasts for 10 seconds.
+The chosen powerup for this assignment is "Armageddon"; when activated, it destroys all the bricks on the current level
 
 ### Changelog
+
+
+## 1.2.0
+- Added "Cannon" Powerup: Creates two cannons attached to the sides of the paddle, while it's active, the player can press the F button to fire a missile from each cannon, that will deactivate the powerup, the created missiles travel vertically upwards at constant speed, and they destroy any brick they touch 
 
 ## 1.1.0
 - Added "Sticky Ball" Powerup: All the balls currently in game at the time of taking the powerup will become sticky for 10 seconds, when they collide with the paddle they won't rebound, instead, they will be left in a serve-like state.
