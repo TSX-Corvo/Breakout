@@ -104,19 +104,20 @@ class PlayState(BaseState):
 
             dice_roll = random.random()
 
-            # Chance to generate two more balls
-            if dice_roll < 0.1:
-                r = brick.get_collision_rect()
-                self.powerups.append(
-                    self.powerups_abstract_factory.get_factory("TwoMoreBall").create(
-                        r.centerx - 8, r.centery - 8
-                    )
-                )
-                        # Change to generate Armageddon
-            elif dice_roll < 1:
+            # Change to generate Armageddon
+            if dice_roll < 0.05:
                 r = brick.get_collision_rect()
                 self.powerups.append(
                     self.powerups_abstract_factory.get_factory("Armageddon").create(
+                        r.centerx - 8, r.centery - 8
+                    )
+                )
+               
+            # Chance to generate two more balls
+            elif dice_roll < 0.1:
+                r = brick.get_collision_rect()
+                self.powerups.append(
+                    self.powerups_abstract_factory.get_factory("TwoMoreBall").create(
                         r.centerx - 8, r.centery - 8
                     )
                 )
@@ -130,7 +131,7 @@ class PlayState(BaseState):
                     )
                 )
             # Chance to generate cannon
-            elif dice_roll < 0.6 and not self.flags['cannon_active']:
+            elif dice_roll < 0.5 and not self.flags['cannon_active']:
                 r = brick.get_collision_rect()
                 self.powerups.append(
                     self.powerups_abstract_factory.get_factory("Cannon").create(
