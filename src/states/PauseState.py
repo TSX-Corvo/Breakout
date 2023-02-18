@@ -18,6 +18,8 @@ class PauseState(BaseState):
         self.live_factor = params["live_factor"]
         self.points_to_next_live = params["points_to_next_live"]
         self.powerups = params["powerups"]
+        self.flags = params["flags"]
+        self.cannons = params["cannons"]
         settings.SOUNDS["pause"].play()
         InputHandler.register_listener(self)
 
@@ -66,6 +68,9 @@ class PauseState(BaseState):
             center=True,
         )
 
+        for cannon in self.cannons:
+            cannon.render(surface)
+
     def on_input(self, input_id: str, input_data: InputData) -> None:
         if input_id == "pause" and input_data.pressed:
             self.state_machine.change(
@@ -79,5 +84,7 @@ class PauseState(BaseState):
                 points_to_next_live=self.points_to_next_live,
                 live_factor=self.live_factor,
                 powerups=self.powerups,
+                flags=self.flags,
+                cannons=self.cannons,
                 resume=True,
             )

@@ -37,7 +37,7 @@ class PlayState(BaseState):
 
         self.cannons = params.get("cannons", [])
 
-        self.flags = params.get("cannons", {
+        self.flags = params.get("flags", {
             'sticky_ball_active': False,
             'cannon_active': False
         }) 
