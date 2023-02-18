@@ -35,10 +35,12 @@ class PlayState(BaseState):
         )
         self.powerups = params.get("powerups", [])
 
-        self.flags = {
+        self.cannons = params.get("cannons", [])
+
+        self.flags = params.get("cannons", {
             'sticky_ball_active': False,
             'cannon_active': False
-        }
+        }) 
 
         if not params.get("resume", False):
             self.balls[0].vx = random.randint(-80, 80)
@@ -167,6 +169,9 @@ class PlayState(BaseState):
                 points_to_next_live=self.points_to_next_live,
                 live_factor=self.live_factor,
             )
+        if len(self.cannons) > 1:
+            self.cannons[0].x = self.paddle.x + 4
+            self.cannons[1].x = self.paddle.x + self.paddle.width - 12
 
     def render(self, surface: pygame.Surface) -> None:
         heart_x = settings.VIRTUAL_WIDTH - 120
@@ -207,6 +212,9 @@ class PlayState(BaseState):
         for powerup in self.powerups:
             powerup.render(surface)
 
+        for cannon in self.cannons:
+            cannon.render(surface)
+
     def on_input(self, input_id: str, input_data: InputData) -> None:
         if input_id == "move_left":
             if input_data.pressed:
@@ -230,6 +238,8 @@ class PlayState(BaseState):
                 points_to_next_live=self.points_to_next_live,
                 live_factor=self.live_factor,
                 powerups=self.powerups,
+                flags=self.flags,
+                cannons=self.cannons
             )
         elif input_id == "enter" and input_data.pressed:
             for ball in self.balls:
